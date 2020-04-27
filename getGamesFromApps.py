@@ -48,7 +48,10 @@ def getGamesDescription(id):
         data = r.json()
         if (data[str(id)]['success']):
             if data[str(id)]['data']['type'] == 'game':
-                return remove_tags(data[str(id)]['data']['detailed_description']), data[str(id)]['data']['genres']
+                if 'genres' is not in data[str(id)]['data'].keys() or 'detailed_description' is not in data[str(id)]['data'].keys():
+                    return "Not Valid"
+                else:
+                    return remove_tags(data[str(id)]['data']['detailed_description']), data[str(id)]['data']['genres']
             else:
                 return "Not Valid"
         else:
