@@ -40,22 +40,26 @@ def remove_tags(text):
 
 #Given ID, return description of game IF it is a game. If not, return Not Valid
 def getGamesDescription(id):
-    url = "https://store.steampowered.com/api/appdetails?appids=" + str(id)
-    r = requests.get(url)
-    if r.text == "null":
-        return "Yikes"
-    else:
-        data = r.json()
-        if (data[str(id)]['success']):
-            if data[str(id)]['data']['type'] == 'game':
-                if 'genres' not in data[str(id)]['data'].keys() or 'detailed_description' not in data[str(id)]['data'].keys():
-                    return "Not Valid"
+    try:
+        url = "https://store.steampowered.com/api/appdetails?appids=" + str(id)
+        r = requests.get(url)
+        if r.text == "null":
+            return "Yikes"
+        else:
+            data = r.json()
+            if (data[str(id)]['success']):
+                if data[str(id)]['data']['type'] == 'game':
+                    if 'genres' not in data[str(id)]['data'].keys() or 'detailed_description' not in data[str(id)]['data'].keys():
+                        return "Not Valid"
+                    else:
+                        return remove_tags(data[str(id)]['data']['detailed_description']), data[str(id)]['data']['genres']
                 else:
-                    return remove_tags(data[str(id)]['data']['detailed_description']), data[str(id)]['data']['genres']
+                    return "Not Valid"
             else:
                 return "Not Valid"
-        else:
-            return "Not Valid"
+    except:
+        print("ERROR!", str(id))
+        return "Not Valid"
             
 steamGames = []
 
